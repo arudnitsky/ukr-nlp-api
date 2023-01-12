@@ -1,13 +1,18 @@
-# syntax=docker/dockerfile:1
+# Using lightweight alpine image
+FROM python:3.8-alpine
 
-FROM python:3.8-slim-buster
+# Installing packages
+RUN apk update
+RUN pip install --no-cache-dir pipenv
 
-WORKDIR /app
+# Defining working directory and adding source code
+WORKDIR /Users/andy/Projects/ukrainian/ukr-nlp-api/service  ?
+COPY Pipfile Pipfile.lock run-service.sh ./ ?
+COPY service ./service ?
 
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+# Install API dependencies
+RUN pipenv install --system --deploy ?
 
-COPY . .
-
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
-
+# Start app
+EXPOSE 5000
+ENTRYPOINT ["/Users/andy/Projects/ukrainian/ukr-nlp-api/service/run-service.sh"]
